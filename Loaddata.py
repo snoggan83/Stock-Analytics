@@ -1,4 +1,4 @@
-import urllib
+import urllib.request
 import os.path
 from datetime import datetime, date
 import pandas as pd
@@ -7,9 +7,8 @@ from matplotlib import pyplot as plt
 
 url1 = "http://www.euroinvestor.se/stock/historicalquotes.aspx?instrumentId="
 url2 = "&format=CSV"
-savepath = 'C:\Users\John\PycharmProjects\untitled2'
-savepathtest = 'C:\\Users\John\\PycharmProjects\\untitled2\\test'
-
+savepath = 'C:\\Users\\John\\PycharmProjects\\Stock-Analytics'
+savepathtest = 'C:\\Users\John\\PycharmProjects\\Stock-Analytics\\test'
 
 
 def load(stocktags, tag):
@@ -50,7 +49,7 @@ def load(stocktags, tag):
         # Load data from file
         while count == err_count:
             try:
-                f = urllib.urlopen(urlfull)
+                f =  urllib.request.urlopen(urlfull)
 
                 data_now = pd.read_csv(f,  delimiter=';', names=["Dates", "Open", "High", "Low", "Close", "Volume"]
                                  ,usecols=range(0, 6), decimal=",", skiprows=1, dtype={'Open': np.float64,
@@ -62,7 +61,7 @@ def load(stocktags, tag):
 
                 f.close()
             except IOError:
-                print 'cannot open', urlfull
+                print('cannot open'), urlfull
                 err_count += 1
             count += 1
 
