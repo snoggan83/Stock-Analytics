@@ -7,21 +7,20 @@ import numpy as np
 from datetime import datetime, date
 import matplotlib.dates as dt
 
+
 # Initializing Properties
 
 # Stock tag
-tag = 'LargeCap'
-# tag = 'MidCap'
-# tag = 'SmallCap'
-# tag = 'Commodities'
-# tag = 'Index'
+# tag = 'large-cap-pi'
+# tag = "mid-cap-pi"
+tag = "small-cap-pi"
 
 #  Running mode
 mode = 'plot'
-# mode = "filter"
+mode = "filter"
 
 # Assigning stocks
-stocktags = Getdata.load_stock_list(tag)
+stocktags = Getdata.scrape_list(tag)
 
 # Assigning data
 datamat = Loaddata.load(stocktags, tag)
@@ -29,6 +28,7 @@ datamat = Loaddata.load(stocktags, tag)
 if mode == 'plot' or mode == "filter":
     for stockname in stocktags.keys():
 
+        # Print Stock name
         print(stockname)
 
         # Initialize mode filter
@@ -50,12 +50,10 @@ if mode == 'plot' or mode == "filter":
         stock["MA200grad"] = np.gradient(stock["MA200"])
         stock["MA50"] = ta.SMA(stock.Close.values, 50)
 
-
         if mode == "filter":
             if stock["RSI"].iloc[-1] < 40 and stock["MA200grad"].iloc[-1] > 0:
                 # Change mode to "plot"
                 modefilter = "nofilter"
-
 
         # Formatting dates to ordinal
         stock["Dates2"] = stock["Dates"].apply(lambda x: x.toordinal())
@@ -97,7 +95,6 @@ if mode == 'plot' or mode == "filter":
             ax1.set_ylabel("Close Price")
             ax1.grid()
             plt.setp(ax1.get_xticklabels(), visible=False)
-
 
             # Setting properties for second subplot
             ax2.plot(stock["Dates"], stock["RSI"])

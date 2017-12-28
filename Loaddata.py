@@ -7,9 +7,8 @@ from matplotlib import pyplot as plt
 
 url1 = "http://www.euroinvestor.se/stock/historicalquotes.aspx?instrumentId="
 url2 = "&format=CSV"
-savepath = 'C:\\Users\\John\\PycharmProjects\\Stock-Analytics'
-savepathtest = 'C:\\Users\John\\PycharmProjects\\Stock-Analytics\\test'
-
+savepath = 'C:\\Users\\John\\Box Sync\\python projects\\Stock-Analytics'
+savepathtest = 'C:\\Users\John\\Box Sync\\python projects\\Stock-Analytics\\test'
 
 def load(stocktags, tag):
     # Stock Book
@@ -20,7 +19,6 @@ def load(stocktags, tag):
     dateparse = lambda x: pd.datetime.strptime(x, '%Y-%m-%d')
 
     for stockname in stocktags.keys():
-
         # Assign Filename
         file_name = stockname
         file_path = os.path.join(savepath, tag, file_name + ".txt")
@@ -33,23 +31,29 @@ def load(stocktags, tag):
 
             if today == file_mod_timestamp:
 
+                print("hej")
+
                 # Read file
-                data = pd.read_csv(file_path,  delimiter=';', decimal=",", skiprows=1, names=["Dates", "Open", "High", "Low", "Close", "Volume"],
+                data = pd.read_csv(file_path,  delimiter=';', decimal=".", skiprows=1, names=["Dates", "Open", "High", "Low", "Close", "Volume"],
                                    parse_dates=['Dates'], date_parser=dateparse, na_filter=True, skip_blank_lines=True, dtype={"Volume": np.float64})
+
+                print(file_name)
+
+
 
                 # Write data to Dictionary
                 stockbook[stockname] = data
                 continue
 
         # Concatenating URL
-        urlfull = url1 + stocktags[stockname][0] + url2
+        urlfull = url1 + stocktags[stockname] + url2
         count = 0
         err_count = 0
 
         # Load data from file
         while count == err_count:
             try:
-                f =  urllib.request.urlopen(urlfull)
+                f = urllib.request.urlopen(urlfull)
 
                 data_now = pd.read_csv(f,  delimiter=';', names=["Dates", "Open", "High", "Low", "Close", "Volume"]
                                  ,usecols=range(0, 6), decimal=",", skiprows=1, dtype={'Open': np.float64,
@@ -107,7 +111,7 @@ def load(stocktags, tag):
                 print(stockname + " Added to dir")
 
                 # Write data to file
-                data_now.to_csv(file_path, index=False)
+                data_now.to_csv(file_path, index=False, sep=";")
 
                 # Write data to Dict
                 stockbook[stockname] = data_now
